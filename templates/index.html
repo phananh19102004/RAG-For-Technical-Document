@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAG Demo</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;max-width:900px;margin:32px auto;padding:0 16px;}
+    textarea{width:100%;height:110px;padding:12px;font-size:16px;}
+    button{padding:10px 16px;font-size:16px;cursor:pointer;margin-top:10px;}
+    #answer{white-space:pre-wrap;border:1px solid #ddd;border-radius:10px;padding:14px;margin-top:16px;min-height:80px;}
+    .row{display:flex;gap:10px;align-items:center}
+    .muted{color:#666;font-size:13px;margin-top:6px}
+  </style>
+</head>
+<body>
+  <h2>RAG System </h2>
+  <p class="muted">input question → submit → see response </p>
+
+  <textarea id="q" placeholder="Enter Question....."></textarea>
+  <div class="row">
+    <button id="btn">Submit</button>
+    <span id="status" class="muted"></span>
+  </div>
+
+  <h3>Answer</h3>
+  <div id="answer"></div>
+
+  <script>
+    const q = document.getElementById('q');
+    const btn = document.getElementById('btn');
+    const status = document.getElementById('status');
+    const answer = document.getElementById('answer');
+
+    async function ask() {
+      const question = q.value.trim();
+      if (!question) { answer.textContent = "You haven't entered a question yet."; return; }
+
+      btn.disabled = true;
+      status.textContent = "Processing...";
+      answer.textContent = "";
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({question})
+        });
+        const data = await res.json();
+        answer.textContent = data.answer ?? "(no answer)";
+      } catch (e) {
+        answer.textContent = "API call error: " + e;
+      } finally {
+        status.textContent = "";
+        btn.disabled = false;
+      }
+    }
+
+    btn.addEventListener('click', ask);
+    q.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') ask();
+    });
+  </script>
+</body>
+</html>

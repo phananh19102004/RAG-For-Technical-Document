@@ -1,0 +1,33 @@
+syntax = "proto3";
+package rag;
+
+service RetrievalService {
+  rpc Retrieve (RetrieveRequest) returns (RetrieveResponse);
+}
+
+service GenerationService {
+  rpc Generate (GenerateRequest) returns (GenerateResponse);
+}
+
+message RetrieveRequest {
+  string query = 1;
+  int32 top_k = 2;
+}
+
+message Chunk {
+  string source = 1;     
+  string text = 2;       
+}
+
+message RetrieveResponse {
+  repeated Chunk chunks = 1;
+}
+
+message GenerateRequest {
+  string question = 1;
+  repeated Chunk chunks = 2;
+}
+
+message GenerateResponse {
+  string answer = 1;
+}
