@@ -6,3 +6,11 @@ Instead of relying solely on a pretrained LLM, the system retrieves relevant doc
 ## Author  
 **Phan Nguyễn Phan Anh**  
 Final Year Student – USTH  
+
+## Technologies Used :
+- LLM: / Qwen / OpenAI API / Ollama
+- FastAPI
+- ChromaDB
+- Langchain
+  
+## System Architecture
